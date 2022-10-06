@@ -16,3 +16,10 @@ steps:
 
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'VsTest - testAssemblies'
+  inputs:
+    command: 'test'
+    projects: '**/Codemancer.Extensions.Wcf.Tests.csproj'
+    testRunTitle: 'Testing'
