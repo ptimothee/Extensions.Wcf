@@ -28,7 +28,7 @@ steps:
   displayName: 'dotnet pack'
   inputs:
     command: pack
-    packagesToPack: '$src/*.csproj'
+    packagesToPack: 'src/*.csproj'
     versioningScheme: byEnvVar
     versionEnvVar: nugetPackVersion
 #  condition: and(Succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
