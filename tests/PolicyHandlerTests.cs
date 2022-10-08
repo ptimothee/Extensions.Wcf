@@ -39,11 +39,11 @@ namespace Codemancer.Extensions.Wcf.Tests
                                             {
                                                 actualRetry++;
                                             });
-
+                
                 services.AddWcf<ISampleTestService>()
                         .ConfigureServiceEndpoint(endpoint =>
                         {
-                            endpoint.Address = new EndpointAddress("http://localhost");
+                            endpoint.Address = new EndpointAddress($"http://{Guid.NewGuid().ToString()}:1234");
                         })
                         .AddPolicyHandler(policy);
 
@@ -76,7 +76,7 @@ namespace Codemancer.Extensions.Wcf.Tests
                 services.AddWcf<ISampleTestService>()
                         .ConfigureServiceEndpoint(endpoint =>
                         {
-                            endpoint.Address = new EndpointAddress("http://localhost");
+                            endpoint.Address = new EndpointAddress($"http://{Guid.NewGuid().ToString()}:1234");
                         })
                         .AddPolicyHandler(policy);
 
