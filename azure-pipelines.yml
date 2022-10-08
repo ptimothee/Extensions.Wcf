@@ -32,7 +32,7 @@ steps:
     packagesToPack: '$src/*.csproj'
     versioningScheme: byEnvVar
     versionEnvVar: nugetPackVersion
-  condition: and(Succeeded()) #ne(variables['Build.Reason'], 'PullRequest')
+#  condition: and(Succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet push'
@@ -41,7 +41,7 @@ steps:
     nuGetFeedType: external
     publishFeedCredentials: 'NuGet service connection'
   enabled: false
-  condition: and(Succeeded()) #ne(variables['Build.Reason'], 'PullRequest')
+#  condition: and(Succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
 - task: NuGetCommand@2
   displayName: 'NuGet push'
@@ -50,4 +50,4 @@ steps:
     packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
     nuGetFeedType: external
     publishFeedCredentials: 'NuGet service connection'
-  condition: and(Succeeded()) #ne(variables['Build.Reason'], 'PullRequest')
+#  condition: and(Succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
