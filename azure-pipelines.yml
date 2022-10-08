@@ -11,6 +11,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  nugetPackVersion: $(Build.BuildNumber)
 
 steps:
 
@@ -23,3 +24,30 @@ steps:
     command: 'test'
     projects: '**/Codemancer.Extensions.Wcf.Tests.csproj'
     testRunTitle: 'Testing'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet pack'
+  inputs:
+    command: pack
+    packagesToPack: '$src/*.csproj'
+    versioningScheme: byEnvVar
+    versionEnvVar: nugetPackVersion
+  condition: and(Succeeded()) #ne(variables['Build.Reason'], 'PullRequest')
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet push'
+  inputs:
+    command: push
+    nuGetFeedType: external
+    publishFeedCredentials: 'NuGet service connection'
+  enabled: false
+  condition: and(Succeeded()) #ne(variables['Build.Reason'], 'PullRequest')
+
+- task: NuGetCommand@2
+  displayName: 'NuGet push'
+  inputs:
+    command: push
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'NuGet service connection'
+  condition: and(Succeeded()) #ne(variables['Build.Reason'], 'PullRequest')
