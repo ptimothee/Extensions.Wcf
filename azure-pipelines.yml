@@ -17,8 +17,14 @@ stages:
   jobs:
   - job: Build
     steps:
-      - script: dotnet build --configuration $(buildConfiguration)
+      #- script: dotnet build --configuration $(buildConfiguration)
+      #  displayName: 'dotnet build $(buildConfiguration)'
+      - task: DotNetCoreCLI@2
         displayName: 'dotnet build $(buildConfiguration)'
+        inputs:
+          command: build
+          projects: 'src/*.csproj'
+          arguments: --configuration $(buildConfiguration)
       - task: DotNetCoreCLI@2
         displayName: 'dotnet pack'
         inputs:
@@ -47,16 +53,8 @@ stages:
         displayName: 'dotnet push'
         inputs:
           command: push
-          nuGetFeedType: external
-          publishFeedCredentials: 'NuGet service connection'
-        enabled: false
-      #  condition: and(Succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
-
-      - task: NuGetCommand@2
-        displayName: 'NuGet push'
-        inputs:
-          command: push
           packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
           nuGetFeedType: external
           publishFeedCredentials: 'NuGet service connection'
+        enabled: false
       #  condition: and(Succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
