@@ -24,7 +24,7 @@ jobs:
   - task: DotNetCoreCLI@2
     displayName: dotnet build
     inputs:
-      arguments: --configuration Release
+      arguments: --configuration Release -property:Version=$(nugetPackageVersion)
   - task: DotNetCoreCLI@2
     displayName: dotnet test
     inputs:
