@@ -1,0 +1,39 @@
+# Variable 'nugetPackageVersion' was defined in the Variables tab
+
+resources:
+  repositories:
+  - repository: self
+    type: git
+    name: 0.0.$(Rev:r)-beta
+    ref: refs/heads/main
+
+trigger:
+ branches:
+    include:
+      -  features/*
+
+jobs:
+- job: Job_1
+  displayName: Agent job 1
+  pool:
+    vmImage: windows-latest
+  steps:
+  - checkout: self
+    clean: true
+    fetchTags: false
+  - task: DotNetCoreCLI@2
+    displayName: dotnet build
+    inputs:
+      arguments: --configuration Release
+  - task: DotNetCoreCLI@2
+    displayName: dotnet test
+    inputs:
+      command: test
+      projects: '**/Codemancer.Extensions.Wcf.Tests.csproj'
+  - task: DotNetCoreCLI@2
+    displayName: dotnet pack
+    inputs:
+      command: pack
+      searchPatternPack: src/*.csproj
+      versioningScheme: byEnvVar
+      versionEnvVar: nugetPackageVersion
