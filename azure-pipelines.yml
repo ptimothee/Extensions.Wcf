@@ -37,3 +37,7 @@ jobs:
       searchPatternPack: src/*.csproj
       versioningScheme: byEnvVar
       versionEnvVar: nugetPackageVersion
+  - task: PublishBuildArtifacts@1
+    displayName: publish artifacts
+    inputs:
+      PathtoPublish: '$(build.artifactstagingdirectory)'
