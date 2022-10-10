@@ -15,6 +15,7 @@ variables:
   version: 0.0
   ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
     semVer: $(version).0
+    assemblyVersion: "$(version).0.$(Build.BuildNumber)"
   ${{ else }}:
     semVer: $(version).0-beta.$(Build.BuildNumber)
     assemblyVersion: "$(version).0.$(Build.BuildNumber)"
