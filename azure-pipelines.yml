@@ -1,5 +1,7 @@
 # Variable 'nugetPackageVersion' was defined in the Variables tab
 
+name: $(Rev:r)
+
 resources:
   repositories:
   - repository: self
@@ -25,7 +27,6 @@ jobs:
 
   pool:
     vmImage: windows-latest
-    name: $(Rev:r)
 
   steps:
   - checkout: self
