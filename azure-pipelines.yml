@@ -1,5 +1,3 @@
-# Variable 'nugetPackageVersion' was defined in the Variables tab
-
 name: $(Rev:r)
 
 resources:
