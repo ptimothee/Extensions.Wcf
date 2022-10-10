@@ -4,7 +4,6 @@ resources:
   repositories:
   - repository: self
     type: git
-    name: $(Rev:r)
     ref: refs/heads/main
 
 trigger:
@@ -26,6 +25,7 @@ jobs:
 
   pool:
     vmImage: windows-latest
+    name: $(Rev:r)
 
   steps:
   - checkout: self
