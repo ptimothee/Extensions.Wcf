@@ -15,8 +15,18 @@ trigger:
 jobs:
 - job: Job_1
   displayName: Create Package
+
   pool:
     vmImage: windows-latest
+
+variables:
+  version: 0.0
+  assemblyVersion: $(version).0.$(Rev:r)
+  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+    semVer: $(version).0
+  ${{ else }}:
+    semVer: $(version).0-beta.$(Rev:r)
+
   steps:
   - checkout: self
     clean: true
@@ -24,7 +34,7 @@ jobs:
   - task: DotNetCoreCLI@2
     displayName: dotnet build
     inputs:
-      arguments: --configuration Release -property:Version=$(nugetPackageVersion)
+      arguments: --configuration Release -property:Version=$(assemblyVersion)
   - task: DotNetCoreCLI@2
     displayName: dotnet test
     inputs:
@@ -36,7 +46,7 @@ jobs:
       command: pack
       searchPatternPack: src/*.csproj
       versioningScheme: byEnvVar
-      versionEnvVar: nugetPackageVersion
+      versionEnvVar: semVer
   - task: PublishBuildArtifacts@1
     displayName: publish artifacts
     inputs:
