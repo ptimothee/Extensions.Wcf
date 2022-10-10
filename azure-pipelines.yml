@@ -12,20 +12,20 @@ trigger:
     include:
       -  features/*
 
+variables:
+  version: 0.0
+  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+    semVer: $(version).0
+  ${{ else }}:
+    semVer: $(version).0-beta.$(Rev:r)
+    assemblyVersion: $(version).0.$(Rev:r)
+
 jobs:
 - job: Job_1
   displayName: Create Package
 
   pool:
     vmImage: windows-latest
-
-variables:
-  version: 0.0
-  assemblyVersion: $(version).0.$(Rev:r)
-  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
-    semVer: $(version).0
-  ${{ else }}:
-    semVer: $(version).0-beta.$(Rev:r)
 
   steps:
   - checkout: self
