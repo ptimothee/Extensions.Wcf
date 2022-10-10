@@ -9,6 +9,8 @@ resources:
 trigger:
  branches:
     include:
+      -  main
+      -  development
       -  features/*
 
 variables:
