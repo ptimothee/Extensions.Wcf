@@ -4,7 +4,7 @@ resources:
   repositories:
   - repository: self
     type: git
-    name: 0.0.$(Rev:r)-beta
+    name: $(Rev:r)
     ref: refs/heads/main
 
 trigger:
@@ -14,11 +14,11 @@ trigger:
 
 variables:
   version: 0.0
-  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+  ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
     semVer: $(version).0
   ${{ else }}:
-    semVer: $(version).0-beta.$(Rev:r)
-    assemblyVersion: "$(version).0.$(Rev:r)"
+    semVer: $(version).0-beta.$(Build.BuildNumber)
+    assemblyVersion: "$(version).0.$(Build.BuildNumber)"
 
 jobs:
 - job: Job_1
