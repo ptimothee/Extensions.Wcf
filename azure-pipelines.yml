@@ -49,6 +49,7 @@ jobs:
       searchPatternPack: src/*.csproj
       versioningScheme: byEnvVar
       versionEnvVar: semVer
+      buildProperties: 'Authors="Patrick Timothee";Product="Codemancer.Extensions.Wcf";PackageLicenseExpression="MIT";MaintainerEmail="patrick.timothee@gmail.com";RepositoryType=git;PackageProjectUrl="$(Build.Repository.Uri)";RepositoryUrl="$(Build.Repository.Uri)";RepositoryCommit=$(Build.SourceVersion);RepositoryBranch="$(Build.SourceBranchName)'
   - task: PublishBuildArtifacts@1
     displayName: publish artifacts
     inputs:
