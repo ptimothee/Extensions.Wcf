@@ -29,15 +29,15 @@ namespace Codemancer.Extensions.Wcf.Tests
         [Trait("Category", "Functional")]
         [Trait("Category", "Integration")]
         [InlineData(1)]
-        public void WhenConfigureRetryPolicyOnSyncOperationShouldApplyRetryCount(int expectedRetry)
+        public async Task WhenConfigureRetryPolicyOnSyncOperationShouldApplyRetryCount(int expectedRetry)
         {
-            int actualRetry = 0;
+            var retryCompletionSource = new TaskCompletionSource<int>();
             using var host = _hostBuilder.ConfigureServices(services =>
             {
                 var policy = Policy<Message>.Handle<EndpointNotFoundException>()
                                             .RetryAsync(expectedRetry, (resp, count) =>
                                             {
-                                                actualRetry++;
+                                                retryCompletionSource.SetResult(count);
                                             });
                 
                 services.AddWcf<ISampleTestService>()
@@ -54,7 +54,7 @@ namespace Codemancer.Extensions.Wcf.Tests
             Action serviceOperation = () => service.Example1(0, "", true);
 
             serviceOperation.Should().Throw<EndpointNotFoundException>();
-
+            var actualRetry = await retryCompletionSource.Task;
             actualRetry.Should().Be(expectedRetry);
         }
 
@@ -64,13 +64,14 @@ namespace Codemancer.Extensions.Wcf.Tests
         [InlineData(1)]
         public async Task WhenConfigureRetryPolicyOnAsyncOperationShouldApplyRetryCount(int expectedRetry)
         {
-            int actualRetry = 0;
+            var retryCompletionSource = new TaskCompletionSource<int>();
+
             using var host = _hostBuilder.ConfigureServices(services =>
             {
                 var policy = Policy<Message>.Handle<EndpointNotFoundException>()
                                             .RetryAsync(expectedRetry, (resp, count) =>
                                             {
-                                                actualRetry++;
+                                                retryCompletionSource.SetResult(count);
                                             });
 
                 services.AddWcf<ISampleTestService>()
@@ -87,6 +88,7 @@ namespace Codemancer.Extensions.Wcf.Tests
             Func<Task> serviceOperation = () => service.Example1Async(0, "", true);
 
             await serviceOperation.Should().ThrowAsync<EndpointNotFoundException>();
+            var actualRetry = await retryCompletionSource.Task;
 
             actualRetry.Should().Be(expectedRetry);
         }
